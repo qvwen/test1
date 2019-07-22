@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+		<link rel="stylesheet" href="css/bootstrap.min.css" />
+	</head>
+
+	<body>
+		<h1 class="h1 text-center">帖子详情</h1>
+		<div class="container" id="idv">
+			<div class="row">
+				<div class="col-md-12">
+					 <h1 class="h1">帖子主题:{{page.headline}}</h1>
+				</div>
+				<div class="col-md-12">
+					<img :src="page.invitationImg" width="500" height="600" name="img"/>
+				</div>
+				
+				<div class="col-md-12">
+					<div class="col-md-1">
+						<h3 class="h3">内容:</h3>
+					</div>
+					<div class="col-md-9">
+						<h3 class="h3">{{page.invitationText}}</h3>
+					</div>
+				</div>
+				<div class="col-md-12">
+					<div class="col-md-3">
+						<h3 class="h3">作者:{{page.us.userName}}</h3>
+					</div>
+					<div class="col-md-4">
+						<h3 class="h3">时间:{{page.invitationDate}}</h3>
+					</div>
+				</div>
+				<div class="col-md-12">
+				 参加人数:{{rshu}}
+				</div>
+			</div>
+		</div>
+		
+	</body>
+	<script src="js/vue.js"></script>
+	<script src="js/jquery-1.8.3.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+	<script>
+	 
+		vml = new Vue({
+			el:"#idv",
+			data:{
+				page:{},
+				rshu:0
+			},methods:{
+				
+			},mounted:function(){
+				 var temp = this;
+				  var id = window.sessionStorage.getItem("id");
+			  $.get("http://127.0.0.1:8080/Aexamination/inv/getinss/"+id,function(data){
+					 temp.page=data;
+					 $("[name=img]").attr("src",data.invitationImg);
+					 temp.rshu =temp.page.topList.length+ temp.page.trampleList.length
+				 },"json")  
+			}
+		})
+	</script>
+</html>

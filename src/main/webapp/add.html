@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>发稿</title>
+		<link rel="stylesheet" href="css/bootstrap.min.css" />
+		<link href="css/file.css" rel="stylesheet" type="text/css" />
+		<style>
+			body {
+				margin: 0px;
+				padding: 0px;
+			}
+			
+			#addEmail {
+				margin: 20px 40px;
+			}
+			
+			#addEmail div {
+				margin-top: 10px;
+			}
+			.dpts{
+				cursor: pointer;
+			}
+			
+			td input,textarea {
+				outline: 0px;
+				border: solid grey 2px;
+				border-radius: 5px;
+			}
+		</style>
+	</head>
+
+	<body>
+			<table>
+				 
+				<!-- <tbody id="tbody2" style="display: none;">
+					<tr  style="border: solid 2px gainsboro;">
+						<td width="100" align="right"><b>抄送人姓名：</b></td>
+					<td width="200"><input type="text" value=""  data-uid=""  id="txtNames1"  readonly="readonly">
+						<span class="btn btn-danger" id="cachso">取消抄送</span>
+						<span class="btn btn-warning" id="resichso1">清除</span>
+					</td>
+					</tr >
+				</tbody> -->
+				<tr><td colspan="2" height="6"></td></tr>
+				 
+			<tr><td colspan="2" height="6"></td></tr>
+				<tr>
+					<td align="right"><label>主题：</label> </td>
+					<td><input type="text"  id="titlets"  value=""/></td>
+				</tr>
+				<!-- <tr>
+					<td align="right"><label>发送选项：</label></td>
+					<td><input type="checkbox" style="width: 15px;height: 15px;" id="rstatus" value="1" /><span style="position: relative;top: -3px;"> 回执</span></td>
+				</tr> -->
+				<tr>
+					<td align="right"><label>图片：</label></td>
+					<td>
+						<a href="javascript:;" class="file">相关文件选择
+							<input type="file" name="" id="vd_path">
+						</a>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2" height="10"></td>
+				</tr>
+				<tbody>
+					<tr>
+						<td></td>
+						<td  id="td">
+				   
+						</td>
+					</tr>
+				</tbody>
+				<tr>
+					<td colspan="2" height="10"></td>
+				</tr>
+				<tr>
+					<td align="right"><label>内容：</label></td>
+					<td><textarea rows="8" cols="80" id="txtContent"></textarea></td>
+				</tr>
+				<tr>
+					<td colspan="2" align="center" id="btns">
+						<button type="button" class="btn btn-success"   data-dismiss="modal">发送</button>
+						<button type="button" class="btn btn-info"  data-dismiss="modal">取消	</button>
+					</td>
+				</tr>
+			</table>
+
+	</body>
+	<script type="text/javascript" src="js/jquery-1.12.4.js"></script>
+	<script type="text/javascript" src="js/bootstrap.min.js"></script>
+	<script src="js/vue.js"></script>
+	<script>
+	 jQuery.ajaxSetup({
+		timeout: 6000,
+		xhrFields: {
+			withCredentials: true
+		},
+		crossDomain: true
+	});
+	 var draft_status=0;
+	 var inbox_id=0;
+	 var outbox_id=0;
+	 var base64Data ="";
+		$(function() {
+			var box1=window.sessionStorage.getItem("box");
+			if(box1!="null"&&box1!=null){
+
+				var box=JSON.parse(box1);
+				$("#txtNames").attr("data-uid",box.outbox_eid);
+				$("#txtNames").val(box.outbox_name);
+				draft_status=box.draftStatus;
+				inbox_id=box.inbox_id;
+				outbox_id=box.outbox_id;
+				document.getElementById("titlets").value=box.title;
+				$("#txtContent").text(box.content);
+				$("#td").empty();
+				$.each(box.strs,function(e,b){
+					var td="<span style='margin: 5px;'><img src='"+b+"' class='icons' width='40' height='30'>"
+					+"<label class='glyphicon glyphicon-remove icon-remove' style='color: red;'></label></span>";
+						$("#td").append($(td));
+				})
+				//window.sessionStorage.setItem("box",null);
+				window.sessionStorage.removeItem("box");
+
+			}
+			
+		var boxs1=window.sessionStorage.getItem("boxs");
+			if(boxs1!="null"&&boxs1!=null){
+				var boxs=JSON.parse(boxs1);
+				$("#titlets").val(boxs.title);
+				$("#txtNames").attr("data-uid",boxs.outbox_eid);
+				$("#txtNames").val(boxs.outbox_name);
+				$("#txtContent").text(boxs.content);
+				draft_status=boxs.draftStatus;
+				inbox_id=boxs.inbox_id;
+				outbox_id=boxs.outbox_id;
+				$("#td").empty();
+				$.each(boxs.strs,function(e,b){
+					var td="<span style='margin: 5px;'><img src='"+b+"' class='icons' width='40' height='30'>"
+					+"<label class='glyphicon glyphicon-remove icon-remove' style='color: red;'></label></span>";
+						$("#td").append($(td));
+				})
+				//window.sessionStorage.setItem("boxs",null);
+				window.sessionStorage.removeItem("boxs");
+
+			}
+			
+			$("#resichso").click(function(){
+				$("#txtNames").val("");
+			})
+			
+			$("#rstatus").click(function(){
+				if(this.checked){
+					$(this).val(1)
+				}else{
+					$(this).val(0)
+
+				}
+			})
+			
+			 
+			
+			$("#vd_path").change(function(e) {
+						var fr = new FileReader();
+						var file = this.files[0];
+						var _temp = file.name.match(/\.jpg|\.png|\.gif|\.bmp/i);
+						if (!_temp) {
+							this.value = "";
+							alert("目前只支持jpg,png,bmp,gif格式图片文件");
+							return false;
+						} else if (file.size > (5*1024 * 1024)) {
+							this.value = "";
+							alert("目前只支持小于5M大小图片文件");
+							return false;
+						}
+						fr.readAsDataURL(file);//读取文件
+						//操作文件事件
+						fr.onload = function() {
+							 base64Data = this.result;//获得base编码字符串格式
+							/* imgObj.name = file.name;//设置文件名
+							imgObj.data = base64Data.substring(base64Data
+									.indexOf(';base64,') + 8);  //设置base64数据字符串 */
+							base64Temp=base64Data;
+							var td="<span style='margin: 5px;'><img src='"+base64Data+"' class='icons' width='40' height='30'>"
+									+"<label class='glyphicon glyphicon-remove icon-remove' style='color: red;'></label></span>";
+							$("#td").append($(td));
+						};
+					});
+			
+			$(document).on("click",".icon-remove",function(){
+				$(this).parent().remove();
+			})
+			
+		
+			$("#vichso").click(function(){
+				$("#tbody1,#tbody2").show();
+			})
+			
+			$("#sendp").click(function(){
+				$("#tbody").show();
+			})
+			
+			$("#sendp1").click(function(){
+				$("#tbody").hide();
+			})
+			
+			$("#cachso").click(function(){
+				$(this).prev().val("");
+				$("#tbody1,#tbody2").hide();
+			})
+			
+			$("#resichso1").click(function(){
+				$(this).prev().prev().val("");
+				
+			})
+			
+			
+			$("#cachso1").click(function(){
+				$("#tbody1").hide();
+			})
+			$("#btns button:eq(0)").click(function(){   
+			 
+				var txtNames= $("#txtNames").attr("data-uid");
+				var titlets= $("#titlets").val();
+				var rstatus= $("#rstatus").val();
+				var txtContent= $("#txtContent").val();
+				if(titlets==""){
+					alert("发送主题不能为空！")
+					return;
+				}
+			var duplicates=$("#txtNames1").attr("data-uid");
+			var box={};
+			 box["headline"] = titlets;
+		      box["invitationImg"] = base64Data;
+		    box["invitationText"] = $("#txtContent").val();
+		    alert(box);
+			$.ajax("http://127.0.0.1:8080/Aexamination/inv/add",{
+				type:"post",
+				contentType:"application/json",
+				dataType:"json",
+				data:JSON.stringify(box),
+				timeout:5000,
+				success:function(data){
+					if(data.code==200){
+						alert("新增成功");
+						 location.href="index.jsp"; 
+					}else{
+						alert("发送失败！"+data.msg);
+					}
+				}
+			});
+				
+			});
+		});
+		 
+				
+	 
+		
+		
+		 
+		
+		 
+		
+		 
+		 
+	</script>
+
+</html>

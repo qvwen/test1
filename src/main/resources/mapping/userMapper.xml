@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.accp.Aexamination.dao.userMapper">
+  <resultMap id="BaseResultMap" type="com.accp.Aexamination.pojo.user">
+    <id column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="user_name" jdbcType="VARCHAR" property="userName" />
+    <result column="user_ac" jdbcType="VARCHAR" property="userAc" />
+    <result column="user_pwd" jdbcType="VARCHAR" property="userPwd" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    user_id, user_name, user_ac, user_pwd
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from user
+    where user_ac = #{ac}  and user_pwd = #{pwd}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from user
+    where user_id = #{userId,jdbcType=INTEGER}
+  </delete>
+   <select id="selectByPrimaryByid" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from user
+    where user_id = #{0}
+  </select>
+ 
+  <insert id="insert" parameterType="com.accp.Aexamination.pojo.user">
+    insert into user (user_id, user_name, user_ac, 
+      user_pwd)
+    values (#{userId,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, #{userAc,jdbcType=VARCHAR}, 
+      #{userPwd,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.accp.Aexamination.pojo.user">
+    insert into user
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="userName != null">
+        user_name,
+      </if>
+      <if test="userAc != null">
+        user_ac,
+      </if>
+      <if test="userPwd != null">
+        user_pwd,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="userId != null">
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="userName != null">
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="userAc != null">
+        #{userAc,jdbcType=VARCHAR},
+      </if>
+      <if test="userPwd != null">
+        #{userPwd,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.accp.Aexamination.pojo.user">
+    update user
+    <set>
+      <if test="userName != null">
+        user_name = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="userAc != null">
+        user_ac = #{userAc,jdbcType=VARCHAR},
+      </if>
+      <if test="userPwd != null">
+        user_pwd = #{userPwd,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where user_id = #{userId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.accp.Aexamination.pojo.user">
+    update user
+    set user_name = #{userName,jdbcType=VARCHAR},
+      user_ac = #{userAc,jdbcType=VARCHAR},
+      user_pwd = #{userPwd,jdbcType=VARCHAR}
+    where user_id = #{userId,jdbcType=INTEGER}
+  </update>
+</mapper>

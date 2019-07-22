@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.accp.Aexamination.dao.invitationMapper">
+	<resultMap id="BaseResultMap" type="com.accp.Aexamination.pojo.invitation">
+		<id column="invitation_id" jdbcType="INTEGER" property="invitationId" />
+		<result column="invitation_text" jdbcType="VARCHAR" property="invitationText" />
+		<result column="user_id" jdbcType="INTEGER" property="userId" />
+		<result column="invitation_date" jdbcType="DATE" property="invitationDate" />
+		<result column="invitation_img" jdbcType="LONGVARCHAR"
+			property="invitationImg" />
+	   <result column="headline"  jdbcType="VARCHAR" property="headline"/>
+		<!-- <collection property="topList" column="invitation_id"
+			select="topFind"></collection>
+		<collection property="trampleList" column="invitation_id"
+			select=""></collection> -->
+	</resultMap>
+	<!-- <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs"
+		type="com.accp.Aexamination.pojo.invitation">
+		
+	</resultMap> -->
+ 
+	<sql id="Base_Column_List">
+		invitation_id, invitation_text, user_id, invitation_date,headline
+	</sql>
+	<sql id="Blob_Column_List">
+		invitation_img
+	</sql>
+
+	  
+
+	<select id="selectByPrimaryKey" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		,
+		<include refid="Blob_Column_List" />
+		from invitation
+		<where>
+			<if test="invitationId!=null"> and invitation_id = #{invitationId}</if>
+		</where>
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from invitation
+		where invitation_id = #{invitationId,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" parameterType="com.accp.Aexamination.pojo.invitation">
+		insert into invitation (invitation_id, invitation_text, user_id,
+		invitation_date, invitation_img)
+		values (#{invitationId,jdbcType=INTEGER},
+		#{invitationText,jdbcType=VARCHAR}, #{userId,jdbcType=INTEGER},
+		#{invitationDate,jdbcType=DATE},
+		#{invitationImg,jdbcType=LONGVARCHAR})
+	</insert>
+	<insert id="insertSelective" parameterType="com.accp.Aexamination.pojo.invitation">
+		insert into invitation
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="invitationId != null">
+				invitation_id,
+			</if>
+			<if test="invitationText != null">
+				invitation_text,
+			</if>
+			<if test="userId != null">
+				user_id,
+			</if>
+			<if test="1 == 1">
+				invitation_date,
+			</if>
+			<if test="invitationImg != null">
+				invitation_img,
+			</if>
+			<if test="headline!=null">
+			headline,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="invitationId != null">
+				#{invitationId,jdbcType=INTEGER},
+			</if>
+			<if test="invitationText != null">
+				#{invitationText,jdbcType=VARCHAR},
+			</if>
+			<if test="userId != null">
+				#{userId,jdbcType=INTEGER},
+			</if>
+			<if test="1 == 1">
+				now(),
+			</if>
+			<if test="invitationImg != null">
+				#{invitationImg,jdbcType=LONGVARCHAR},
+			</if>
+			<if test="headline!=null">
+				#{headline,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="com.accp.Aexamination.pojo.invitation">
+		update invitation
+		<set>
+			<if test="invitationText != null">
+				invitation_text = #{invitationText,jdbcType=VARCHAR},
+			</if>
+			<if test="userId != null">
+				user_id = #{userId,jdbcType=INTEGER},
+			</if>
+			<if test="invitationDate != null">
+				invitation_date = #{invitationDate,jdbcType=DATE},
+			</if>
+			<if test="invitationImg != null">
+				invitation_img = #{invitationImg,jdbcType=LONGVARCHAR},
+			</if>
+		</set>
+		where invitation_id = #{invitationId,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKeyWithBLOBs" parameterType="com.accp.Aexamination.pojo.invitation">
+		update invitation
+		set invitation_text = #{invitationText,jdbcType=VARCHAR},
+		user_id = #{userId,jdbcType=INTEGER},
+		invitation_date = #{invitationDate,jdbcType=DATE},
+		invitation_img = #{invitationImg,jdbcType=LONGVARCHAR}
+		where invitation_id = #{invitationId,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.accp.Aexamination.pojo.invitation">
+		update invitation
+		set invitation_text = #{invitationText,jdbcType=VARCHAR},
+		user_id = #{userId,jdbcType=INTEGER},
+		invitation_date = #{invitationDate,jdbcType=DATE}
+		where invitation_id = #{invitationId,jdbcType=INTEGER}
+	</update>
+</mapper>
