@@ -69,6 +69,7 @@ public class invitationAction {
 			} else {
 				map.put("code", 500);
 				map.put("mag", "新增失败!");
+				map.put("mag", "新增失败1!");
 			}
 		}else {
 					map.put("code", 400);
